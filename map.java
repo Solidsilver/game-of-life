@@ -35,6 +35,7 @@ public class map
     }
         public void draw(Graphics g)
         {
+            
             int ix=0;
             int iy=0;
             for(int row=0;row<height;row++)

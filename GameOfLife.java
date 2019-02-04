@@ -1,10 +1,16 @@
+import java.awt.Graphics;
+import java.awt.Image;
 import java.util.Random;
+
+import javax.swing.ImageIcon;
 
 public class GameOfLife {
     private boolean[][] grid;
     private boolean[][] prevState;
     private int sizeX;
     private int sizeY;
+
+    private Image BLOCK_DK, BLOCK_LT;
 
     private int sleepTime;
 
@@ -23,6 +29,10 @@ public class GameOfLife {
         this.sizeY = height+(2*boarderSize);
         this.grid = new boolean[width + 2*boarderSize][height + 2*boarderSize];
         this.sleepTime = 75;
+        BLOCK_DK = new ImageIcon("dark.jpg").getImage();
+        BLOCK_LT = new ImageIcon("light.png").getImage();
+        generateBoard();
+        
     }
     
 
@@ -41,8 +51,29 @@ public class GameOfLife {
         GOL.run();
     }
 
+    public void draw(Graphics g)
+        {
+            this.updateGrid();
+            int ix=0;
+            int iy=0;
+            for(int row=0;row<this.sizeX;row++)
+            {
+                for(int col=0;col<this.sizeY;col++)
+                {
+                    if(this.grid[row][col])
+                    {
+                         g.drawImage(BLOCK_LT, ix, iy, null);
+                         ix=ix+16;
+                    } else {
+                        g.drawImage(BLOCK_DK, ix, iy, null);
+                         ix=ix+16;
+                    }
+                }
+            }
+        }
+
     public void run() {
-        generateBoard();
+        //generateBoard();
         int iterations = 0;
         while (true) {
             System.out.print("\033[H\033[2J");
