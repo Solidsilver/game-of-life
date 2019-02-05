@@ -63,9 +63,9 @@ public class GameOfLife {
             for (int x = this.boarderSize-1; x < this.sizeX-this.boarderSize; x++) {
                 for (int y = this.boarderSize-1; y < this.sizeY-this.boarderSize; y++) {
                     if (this.grid[x][y]) {
-                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.BLACK));
-                    } else {
                         shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.WHITE));
+                    } else {
+                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.BLACK));
                     }
                 }
             }
