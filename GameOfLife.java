@@ -1,10 +1,5 @@
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Shape;
 import java.util.Random;
-
-import javax.swing.ImageIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +9,6 @@ public class GameOfLife {
     private boolean[][] prevState;
     private int sizeX;
     private int sizeY;
-
-    private Image BLOCK_DK, BLOCK_LT;
 
     private int sleepTime;
 
@@ -34,8 +27,6 @@ public class GameOfLife {
         this.sizeY = height+(2*boarderSize);
         this.grid = new boolean[width + 2*boarderSize][height + 2*boarderSize];
         this.sleepTime = 75;
-        BLOCK_DK = new ImageIcon("dark.jpg").getImage();
-        BLOCK_LT = new ImageIcon("light.png").getImage();
         generateBoard();
         
     }
@@ -74,7 +65,6 @@ public class GameOfLife {
 
     public void run() {
         //generateBoard();
-        int iterations = 0;
         while (true) {
             System.out.print("\033[H\033[2J");
             this.printGrid();
