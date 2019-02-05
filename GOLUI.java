@@ -41,8 +41,27 @@ class GOLUI extends JFrame {
         scroller = new JScrollPane(jPanel2); 
         //ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         // scroller.setPreferredSize( new Dimension (420,420));
-        scroller.getVerticalScrollBar().setUnitIncrement(16);
-        scroller.getHorizontalScrollBar().setUnitIncrement(16);
+        //scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollBar vertScroll = new JScrollBar(JScrollBar.VERTICAL) {
+
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+        };
+        JScrollBar horScroll = new JScrollBar(JScrollBar.HORIZONTAL) {
+
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+        };
+        scroller.setVerticalScrollBar(vertScroll);
+        scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scroller.setHorizontalScrollBar(horScroll);
+        scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroller.getVerticalScrollBar().setUnitIncrement(8);
+        scroller.getHorizontalScrollBar().setUnitIncrement(8);
         this.setContentPane(scroller);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
