@@ -16,7 +16,7 @@ import java.util.Random;
 
 import javax.swing.*;
 
-class JavaPaintUI extends JFrame {
+class GOLUI extends JFrame {
     private static final Color FILL_COLOR = Color.BLUE;
     private static final Color BORDER_COLOR = Color.RED;
     public static final Stroke STROKE = new BasicStroke(4f);
@@ -24,7 +24,7 @@ class JavaPaintUI extends JFrame {
     private JPanel jPanel2;
     JScrollPane scroller;
 
-    public JavaPaintUI() {
+    public GOLUI() {
         initComponents();
     }
 
@@ -79,7 +79,7 @@ class JavaPaintUI extends JFrame {
     public static void main(String args[]) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JavaPaintUI().setVisible(true);
+                new GOLUI().setVisible(true);
             }
         });
     }

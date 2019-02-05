@@ -58,19 +58,13 @@ public class GameOfLife {
 
     public List<Tile> draw(int tileSize)
         {
-            //int tileSize = 8;
             List<Tile> shList = new ArrayList<>();
-            //System.out.println("GOL: drawing");
             this.updateGrid();
             for (int x = this.boarderSize-1; x < this.sizeX-this.boarderSize; x++) {
                 for (int y = this.boarderSize-1; y < this.sizeY-this.boarderSize; y++) {
                     if (this.grid[x][y]) {
                         shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.BLACK));
-                        //g.setColor(Color.BLACK);
-                        //g.fillRect(16*x, 16*y, 16, 16);
                     } else {
-                        //g.setColor(Color.WHITE);
-                        //g.fillRect(16*x, 16*y, 16, 16);
                         shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.WHITE));
                     }
                 }
