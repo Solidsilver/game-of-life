@@ -40,11 +40,14 @@ public class Panel extends JPanel implements KeyListener, Runnable {
     }
 
     public void run() {
+        System.out.println("Panel: Run started");
         long startTime;
         long elapsedTime;
         long diff;
         long sleepTime;
         long overSleep = 0;
+
+
 
         image = new BufferedImage(Width, Height, BufferedImage.TYPE_INT_RGB);
         g = image.getGraphics();
@@ -70,8 +73,13 @@ public class Panel extends JPanel implements KeyListener, Runnable {
         }
     }
 
+    public void paint(Graphics g) {
+        g.setColor(Color.red);
+        g.fillRect(10,10,100,100);
+    }
+
     private void gameRender() {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, Width, Height);
         g.setColor(Color.BLACK);
         map1.draw(g);

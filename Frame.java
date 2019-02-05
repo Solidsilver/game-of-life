@@ -16,5 +16,7 @@ public class Frame extends JFrame
         public static void main(String [] args)
         {
             Frame n = new Frame();
+            System.out.println("RUNNING");
+            //n.ng.run();
         }
 }

@@ -1,8 +1,13 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Shape;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameOfLife {
     private boolean[][] grid;
@@ -51,25 +56,26 @@ public class GameOfLife {
         GOL.run();
     }
 
-    public void draw(Graphics g)
+    public List<Tile> draw(int tileSize)
         {
+            //int tileSize = 8;
+            List<Tile> shList = new ArrayList<>();
+            //System.out.println("GOL: drawing");
             this.updateGrid();
-            int ix=0;
-            int iy=0;
-            for(int row=0;row<this.sizeX;row++)
-            {
-                for(int col=0;col<this.sizeY;col++)
-                {
-                    if(this.grid[row][col])
-                    {
-                         g.drawImage(BLOCK_LT, ix, iy, null);
-                         ix=ix+16;
+            for (int x = this.boarderSize-1; x < this.sizeX-this.boarderSize; x++) {
+                for (int y = this.boarderSize-1; y < this.sizeY-this.boarderSize; y++) {
+                    if (this.grid[x][y]) {
+                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.BLACK));
+                        //g.setColor(Color.BLACK);
+                        //g.fillRect(16*x, 16*y, 16, 16);
                     } else {
-                        g.drawImage(BLOCK_DK, ix, iy, null);
-                         ix=ix+16;
+                        //g.setColor(Color.WHITE);
+                        //g.fillRect(16*x, 16*y, 16, 16);
+                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.WHITE));
                     }
                 }
             }
+            return shList;
         }
 
     public void run() {
