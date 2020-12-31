@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameOfLife {
-    private boolean[][] grid;
-    private boolean[][] prevState;
+    private GOLGrid ggrid;
+    // private boolean[][] grid;
+    // private boolean[][] prevState;
     private int sizeX;
     private int sizeY;
 
@@ -23,14 +24,14 @@ public class GameOfLife {
     }
 
     public GameOfLife(int width, int height) {
-        this.sizeX = width+(2*boarderSize);
-        this.sizeY = height+(2*boarderSize);
-        this.grid = new boolean[width + 2*boarderSize][height + 2*boarderSize];
+        this.sizeX = width + (2 * boarderSize);
+        this.sizeY = height + (2 * boarderSize);
+        boolean[][] grid = new boolean[width + 2 * boarderSize][height + 2 * boarderSize];
+        this.ggrid = new GOLGrid(grid, this.sizeX, this.sizeY);
         this.sleepTime = 75;
         generateBoard();
-        
+
     }
-    
 
     public static void main(String[] args) {
         GameOfLife GOL = new GameOfLife();
@@ -39,7 +40,7 @@ public class GameOfLife {
             if (args.length > 1) {
                 int sizeTwo = Integer.parseInt(args[1]);
                 GOL = new GameOfLife(sizeOne, sizeTwo);
-                //GOL = new GameOfLife()
+                // GOL = new GameOfLife()
             } else {
                 GOL = new GameOfLife(sizeOne);
             }
@@ -47,24 +48,25 @@ public class GameOfLife {
         GOL.run();
     }
 
-    public List<Tile> draw(int tileSize)
-        {
-            List<Tile> shList = new ArrayList<>();
-            this.updateGrid();
-            for (int x = this.boarderSize-1; x < this.sizeX-this.boarderSize; x++) {
-                for (int y = this.boarderSize-1; y < this.sizeY-this.boarderSize; y++) {
-                    if (this.grid[x][y]) {
-                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.WHITE));
-                    } else {
-                        shList.add(new Tile(tileSize*(x-boarderSize), tileSize*(y-boarderSize), tileSize, Color.BLACK));
-                    }
+    public List<Tile> draw(int tileSize) {
+        List<Tile> shList = new ArrayList<>();
+        this.updateGrid();
+        for (int x = this.boarderSize - 1; x < this.sizeX - this.boarderSize; x++) {
+            for (int y = this.boarderSize - 1; y < this.sizeY - this.boarderSize; y++) {
+                if (this.ggrid.cur[x][y]) {
+                    shList.add(new Tile(tileSize * (x - boarderSize), tileSize * (y - boarderSize), tileSize,
+                            Color.WHITE));
+                } else {
+                    shList.add(new Tile(tileSize * (x - boarderSize), tileSize * (y - boarderSize), tileSize,
+                            Color.BLACK));
                 }
             }
-            return shList;
         }
+        return shList;
+    }
 
     public void run() {
-        //generateBoard();
+        // generateBoard();
         while (true) {
             System.out.print("\033[H\033[2J");
             this.printGrid();
@@ -75,26 +77,26 @@ public class GameOfLife {
                 e.printStackTrace();
             }
         }
-        //System.out.println("Finished simulation - Iterations: " + iterations);
+        // System.out.println("Finished simulation - Iterations: " + iterations);
     }
-
 
     public void generateBoard() {
         Random rnd = new Random();
-        int maxTiles = this.sizeX*this.sizeY/10;
+        int maxTiles = this.sizeX * this.sizeY / 10;
         for (int x = this.boarderSize; x < this.sizeX && maxTiles > 0; x++) {
             for (int y = this.boarderSize; y < this.sizeY; y++) {
                 boolean putOne = false;
-                int nCount = this.getNeighborCount(this.grid, x, y);
+                int nCount = this.getNeighborCount(this.ggrid.cur, x, y);
                 if (nCount < 2) {
-                    putOne = rnd.nextBoolean()&& rnd.nextBoolean()&& rnd.nextBoolean();
+                    putOne = rnd.nextBoolean() && rnd.nextBoolean() && rnd.nextBoolean();
                 } else if (nCount == 2) {
-                    putOne = rnd.nextBoolean()&& rnd.nextBoolean();
+                    putOne = rnd.nextBoolean() && rnd.nextBoolean();
                 } else {
-                    putOne = rnd.nextBoolean() && rnd.nextBoolean() && rnd.nextBoolean()&& rnd.nextBoolean()&& rnd.nextBoolean();
+                    putOne = rnd.nextBoolean() && rnd.nextBoolean() && rnd.nextBoolean() && rnd.nextBoolean()
+                            && rnd.nextBoolean();
                 }
                 if (putOne) {
-                    this.grid[x][y] = true;
+                    this.ggrid.cur[x][y] = true;
                     maxTiles--;
                 }
             }
@@ -108,15 +110,15 @@ public class GameOfLife {
             for (int y = 0; y < this.sizeY; y++) {
                 nCount = getNeighborCount(x, y);
 
-                if (this.grid[x][y]) {
+                if (this.ggrid.cur[x][y]) {
                     if (nCount == 1 || nCount == 0) {
-                        this.grid[x][y] = false;
+                        this.ggrid.cur[x][y] = false;
                     } else if (nCount >= 4) {
-                        this.grid[x][y] = false;
+                        this.ggrid.cur[x][y] = false;
                     }
                 } else {
                     if (nCount == 3) {
-                        this.grid[x][y] = true;
+                        this.ggrid.cur[x][y] = true;
                     }
                 }
             }
@@ -124,16 +126,16 @@ public class GameOfLife {
     }
 
     private int getNeighborCount(int x, int y) {
-        return this.getNeighborCount(this.prevState, x, y);
+        return this.getNeighborCount(this.ggrid.prev, x, y);
     }
 
-    private int getNeighborCount(boolean[][] grid, int x, int y){
+    private int getNeighborCount(boolean[][] grid, int x, int y) {
         int count = 0;
         int startX, endX, startY, endY;
-        startX = x-1;
-        endX = x+1;
-        startY = y+1;
-        endY = y-1;
+        startX = x - 1;
+        endX = x + 1;
+        startY = y + 1;
+        endY = y - 1;
         if (x == 0) {
             startX = x;
         } else if (x == this.sizeX - 1) {
@@ -149,7 +151,7 @@ public class GameOfLife {
         for (int loopX = startX; loopX <= endX; loopX++) {
             for (int loopY = startY; loopY >= endY; loopY--) {
                 if (grid[loopX][loopY])
-                count ++;
+                    count++;
             }
         }
         if (grid[x][y]) {
@@ -162,28 +164,28 @@ public class GameOfLife {
         int count = 0;
         for (int x = 0; x < this.sizeX; x++) {
             for (int y = 0; y < this.sizeY; y++) {
-                if (this.grid[x][y])
-                count ++;
+                if (this.ggrid.cur[x][y])
+                    count++;
             }
         }
         return count;
     }
 
     private void printGrid() {
-        for (int printX = this.boarderSize-1; printX < this.sizeX-this.boarderSize; printX++) {
-            for (int printY = this.boarderSize-1; printY < this.sizeY-this.boarderSize; printY++) {
-                if (this.grid[printX][printY]) {
-                    //System.out.print("⬛");
-                    //System.out.print("⚫");
-                    //System.out.print("🔴");
+        for (int printX = this.boarderSize - 1; printX < this.sizeX - this.boarderSize; printX++) {
+            for (int printY = this.boarderSize - 1; printY < this.sizeY - this.boarderSize; printY++) {
+                if (this.ggrid.cur[printX][printY]) {
+                    // System.out.print("⬛");
+                    // System.out.print("⚫");
+                    // System.out.print("🔴");
                     System.out.print("⬜");
-                    //System.out.print(" ◼");
-                    //System.out.print("⚪");
+                    // System.out.print(" ◼");
+                    // System.out.print("⚪");
                 } else {
-                    //System.out.print("⬜");
-                    //System.out.print("⚪");
-                    //System.out.print(" ◻");
-                    //System.out.print("🔄");
+                    // System.out.print("⬜");
+                    // System.out.print("⚪");
+                    // System.out.print(" ◻");
+                    // System.out.print("🔄");
                     System.out.print("  ");
                 }
             }
@@ -192,7 +194,7 @@ public class GameOfLife {
     }
 
     private boolean[][] getState() {
-        return this.grid;
+        return this.ggrid.cur;
     }
 
     private boolean isInState(boolean[][] other) {
@@ -200,8 +202,8 @@ public class GameOfLife {
             return false;
         }
         for (int x = 0; x < this.sizeX; x++) {
-            for (int y = 0; y < this.sizeY; y++){
-                if (this.grid[x][y] != other[x][y]) {
+            for (int y = 0; y < this.sizeY; y++) {
+                if (this.ggrid.cur[x][y] != other[x][y]) {
                     return false;
                 }
             }
@@ -210,14 +212,15 @@ public class GameOfLife {
     }
 
     private void setPrevState() {
-        if (this.prevState == null) {
-            this.prevState = new boolean[this.sizeX][this.sizeY];
-        }
-        for (int x = 0; x < this.sizeX; x++) {
-            for (int y = 0; y < this.sizeY; y++) {
-                this.prevState[x][y] = this.grid[x][y];
-            }
-        }
+        // if (this.prevState == null) {
+        // this.prevState = new boolean[this.sizeX][this.sizeY];
+        // }
+        // for (int x = 0; x < this.sizeX; x++) {
+        // for (int y = 0; y < this.sizeY; y++) {
+        // this.prevState[x][y] = this.grid[x][y];
+        // }
+        // }
+        this.ggrid.copyState();
     }
-    
+
 }
