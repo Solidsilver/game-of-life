@@ -7,9 +7,10 @@ const DEAD_COLOR = "#FFFFFF";
 const ALIVE_COLOR = "#000000";
 
 // Construct the universe, and get its width and height.
-const universe = Universe.new();
+const universe = Universe.new(256, 156);
 const width = universe.width();
 const height = universe.height();
+const size = width * height
 
 const canvas = document.getElementById("game-of-life-canvas");
 canvas.height = (CELL_SIZE + 1) * height + 1;
@@ -42,7 +43,7 @@ const getIndex = (row, column) => {
 
 const drawCells = () => {
   const cellsPtr = universe.cells();
-  const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+  const cells = new Uint8Array(memory.buffer, cellsPtr, size);
 
   ctx.beginPath();
   for (let row = 0; row < height; row++) {
@@ -64,9 +65,7 @@ const drawCells = () => {
 
 const render_loop = () => {
   universe.tick();
-  drawGrid();
   drawCells();
-  // setTimeout(() => { requestAnimationFrame(render_loop) }, 50);
   requestAnimationFrame(render_loop);
 };
 
